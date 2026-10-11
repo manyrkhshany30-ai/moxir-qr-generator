@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR ساز</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{font-family:'Vazirmatn',Tahoma,sans-serif;color:#fff;background:#000;min-height:100vh;padding:28px 16px 40px;display:flex;justify-content:center}
+.w{width:100%;max-width:440px}
+.f{background:rgba(255,255,255,.05);border:2px solid #fff;border-radius:26px;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);margin-bottom:26px;padding:20px;box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -3px 6px rgba(255,255,255,.12),0 0 0 5px rgba(255,255,255,.1),0 8px 0 rgba(255,255,255,.22),0 16px 28px #000}
+.h{text-align:center}
+.h img{display:block;width:210px;max-width:70%;height:auto;margin:0 auto 14px}
+h1{margin:0;font-size:1.9rem;font-weight:800}
+p{margin:6px 0 0;color:rgba(255,255,255,.78);font-size:.95rem;line-height:1.8}
+label{display:block;font-size:.9rem;color:rgba(255,255,255,.78);margin-bottom:8px}
+textarea{width:100%;min-height:96px;resize:none;background:rgba(255,255,255,.04);color:#fff;border:2px solid #fff;border-radius:18px;padding:14px 16px;font:inherit;font-size:1rem;line-height:1.7;direction:ltr;text-align:left;outline:none;box-shadow:inset 0 3px 8px rgba(255,255,255,.12),inset 0 -2px 4px #000,0 0 0 3px rgba(255,255,255,.08)}
+textarea::placeholder{color:rgba(255,255,255,.4)}
+.r{display:flex;gap:10px;margin-top:14px}
+button{font:inherit;cursor:pointer;color:#fff;background:#000;border:2px solid #fff;border-radius:16px;padding:12px 16px;font-size:.95rem;font-weight:600;box-shadow:inset 0 2px 0 rgba(255,255,255,.5),inset 0 -3px 5px rgba(255,255,255,.12),0 4px 0 rgba(255,255,255,.35),0 8px 14px #000}
+button:active{transform:translateY(4px);box-shadow:inset 0 2px 6px rgba(255,255,255,.25)}
+#go{flex:1;font-weight:800;font-size:1rem}
+.q{width:min(100%,280px);aspect-ratio:1;margin:0 auto;border-radius:20px;background:#fff;border:3px solid #fff;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#333;text-align:center;box-shadow:0 0 0 5px rgba(255,255,255,.14),0 8px 0 rgba(255,255,255,.25),0 16px 26px #000}
+.q img{width:100%;height:100%;display:none}
+#msg{min-height:1.6em;margin:22px 0 0;text-align:center;font-size:.9rem}
+#dl{display:block;width:100%;margin-top:8px}
+#dl[disabled]{opacity:.35;pointer-events:none}
+.s{font-size:.8rem;text-align:center;margin:0}
+</style>
+</head>
+<body>
+<main class="w">
+<header class="f h">
+<img alt="شیر و خورشید" src="data:image/png;base64,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">
+<h1>ساخت QR کد</h1>
+<p>لینک یا متنت را بنویس؛ همان لحظه به کد قابل اسکن تبدیل می‌شود.</p>
+</header>
+<section class="f">
+<label for="txt">لینک یا متن</label>
+<textarea id="txt" placeholder="https://instagram.com/your-page" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+<div class="r">
+<button id="go" type="button">ساخت QR</button>
+<button id="pa" type="button">چسباندن</button>
+<button id="cl" type="button">پاک</button>
+</div>
+</section>
+<section class="f">
+<div class="q"><span id="empty">اینجا QR کد تو نشان داده می‌شود</span><img id="out" alt="QR"></div>
+<p id="msg"></p>
+<button id="dl" type="button" disabled>ذخیره‌ی عکس</button>
+<p class="s">اگر ذخیره کار نکرد، روی QR نگه دار و ذخیره‌ی عکس را بزن.</p>
+</section>
+<p class="s" id="d">وضعیت: جاوااسکریپت اجرا نشده ✗</p>
+</main>
+<script>
+function makeQR(text,fm){
+var T=[[1,26,16],[1,44,28],[1,70,44],[2,50,32],[2,67,43],[4,43,27],[4,49,31],[2,60,38,2,61,39],[3,58,36,2,59,37],[4,69,43,1,70,44],[1,80,50,4,81,51],[6,58,36,2,59,37],[8,59,37,1,60,38],[4,64,40,5,65,41]];
+var s=unescape(encodeURIComponent(text)),d=[],i,j,k,v,b;
+for(i=0;i<s.length;i++)d.push(s.charCodeAt(i));
+var blocks;
+for(v=1;v<=14;v++){
+var r=T[v-1],dc=0;
+for(i=0;i<r.length;i+=3)dc+=r[i]*r[i+2];
+if(4+(v<10?8:16)+8*d.length<=8*dc)break;
+}
+if(v>14)throw new Error('long');
+var r=T[v-1],dc=0;
+for(i=0;i<r.length;i+=3)dc+=r[i]*r[i+2];
+var bits=[];
+function put(x,n){for(var q=n-1;q>=0;q--)bits.push((x>>q)&1);}
+put(4,4);put(d.length,v<10?8:16);
+for(i=0;i<d.length;i++)put(d[i],8);
+for(i=0;i<4&&bits.length<8*dc;i++)bits.push(0);
+while(bits.length%8)bits.push(0);
+for(i=0xEC;bits.length<8*dc;i^=0xEC^0x11)put(i,8);
+var cw=[];
+for(i=0;i<bits.length;i+=8){var x=0;for(j=0;j<8;j++)x=x*2+bits[i+j];cw.push(x);}
+function mul(x,y){var z=0;for(var q=7;q>=0;q--){z=(z<<1)^((z>>>7)*0x11D);z^=((y>>>q)&1)*x;}return z;}
+function rs(data,n){
+var g=[],q,w;
+for(q=0;q<n-1;q++)g.push(0);g.push(1);
+var root=1;
+for(q=0;q<n;q++){for(w=0;w<g.length;w++){g[w]=mul(g[w],root);if(w+1<g.length)g[w]^=g[w+1];}root=mul(root,2);}
+var res=[];for(q=0;q<n;q++)res.push(0);
+data.forEach(function(bt){var f=bt^res.shift();res.push(0);for(var u=0;u<n;u++)res[u]^=mul(g[u],f);});
+return res;
+}
+blocks=[];var pos=0;
+for(i=0;i<r.length;i+=3){
+for(j=0;j<r[i];j++){
+var dat=cw.slice(pos,pos+r[i+2]);pos+=r[i+2];
+blocks.push({d:dat,e:rs(dat,r[i+1]-r[i+2])});
+}
+}
+var out=[],maxd=0;
+blocks.forEach(function(bk){if(bk.d.length>maxd)maxd=bk.d.length;});
+for(i=0;i<maxd;i++)blocks.forEach(function(bk){if(i<bk.d.length)out.push(bk.d[i]);});
+for(i=0;i<blocks[0].e.length;i++)blocks.forEach(function(bk){out.push(bk.e[i]);});
+var n=17+4*v,m=[],f=[];
+for(i=0;i<n;i++){m.push([]);f.push([]);for(j=0;j<n;j++){m[i].push(0);f[i].push(0);}}
+function sf(x,y,val){if(x>=0&&y>=0&&x<n&&y<n){m[y][x]=val?1:0;f[y][x]=1;}}
+for(i=0;i<n;i++){sf(6,i,i%2==0);sf(i,6,i%2==0);}
+function finder(cx,cy){for(var dy=-4;dy<=4;dy++)for(var dx=-4;dx<=4;dx++){var ds=Math.max(Math.abs(dx),Math.abs(dy));sf(cx+dx,cy+dy,ds!=2&&ds!=4);}}
+finder(3,3);finder(n-4,3);finder(3,n-4);
+var na=v==1?0:Math.floor(v/7)+2,al=[];
+if(na){
+var last=n-7,step=Math.ceil((last-6)/(na-1)/2)*2;
+al=[6];for(i=na-2;i>=0;i--)al.push(last-step*i);
+}
+for(i=0;i<al.length;i++)for(j=0;j<al.length;j++){
+if((i==0&&j==0)||(i==0&&j==al.length-1)||(i==al.length-1&&j==0))continue;
+for(var dy=-2;dy<=2;dy++)for(var dx=-2;dx<=2;dx++)sf(al[i]+dx,al[j]+dy,Math.max(Math.abs(dx),Math.abs(dy))!=1);
+}
+function fmt(mask){
+var dd=mask,rem=dd;
+for(var q=0;q<10;q++)rem=(rem<<1)^((rem>>>9)*0x537);
+var bt=((dd<<10)|rem)^0x5412;
+function g(q){return (bt>>>q)&1;}
+for(var q=0;q<=5;q++)sf(8,q,g(q));
+sf(8,7,g(6));sf(8,8,g(7));sf(7,8,g(8));
+for(var q=9;q<15;q++)sf(14-q,8,g(q));
+for(var q=0;q<8;q++)sf(n-1-q,8,g(q));
+for(var q=8;q<15;q++)sf(8,n-15+q,g(q));
+sf(8,n-8,1);
+}
+fmt(0);
+if(v>=7){
+var rem=v;for(i=0;i<12;i++)rem=(rem<<1)^((rem>>>11)*0x1F25);
+var vb=(v<<12)|rem;
+for(i=0;i<18;i++){var bt=(vb>>>i)&1,a=n-11+i%3,c=Math.floor(i/3);sf(a,c,bt);sf(c,a,bt);}
+}
+var idx=0;
+for(var right=n-1;right>=1;right-=2){
+if(right==6)right=5;
+for(var vert=0;vert<n;vert++)for(j=0;j<2;j++){
+var x=right-j,up=((right+1)&2)==0,y=up?n-1-vert:vert;
+if(!f[y][x]&&idx<out.length*8){m[y][x]=(out[idx>>>3]>>>(7-(idx&7)))&1;idx++;}
+}
+}
+function mask(k){
+for(var y=0;y<n;y++)for(var x=0;x<n;x++){
+if(f[y][x])continue;
+var t;
+switch(k){
+case 0:t=(x+y)%2==0;break;
+case 1:t=y%2==0;break;
+case 2:t=x%3==0;break;
+case 3:t=(x+y)%3==0;break;
+case 4:t=(Math.floor(x/3)+Math.floor(y/2))%2==0;break;
+case 5:t=x*y%2+x*y%3==0;break;
+case 6:t=(x*y%2+x*y%3)%2==0;break;
+default:t=((x+y)%2+x*y%3)%2==0;
+}
+if(t)m[y][x]^=1;
+}
+}
+function pen(){
+var p=0,y,x,run;
+for(y=0;y<n;y++){
+run=1;for(x=1;x<n;x++){if(m[y][x]==m[y][x-1]){run++;if(run==5)p+=3;else if(run>5)p++;}else run=1;}
+}
+for(x=0;x<n;x++){
+run=1;for(y=1;y<n;y++){if(m[y][x]==m[y-1][x]){run++;if(run==5)p+=3;else if(run>5)p++;}else run=1;}
+}
+for(y=0;y<n-1;y++)for(x=0;x<n-1;x++){var c=m[y][x];if(c==m[y][x+1]&&c==m[y+1][x]&&c==m[y+1][x+1])p+=3;}
+return p;
+}
+var best=0,bp=1e9;
+for(i=0;i<8;i++){mask(i);fmt(i);var p=pen();if(p<bp){bp=p;best=i;}mask(i);}
+if(fm!==undefined)best=fm;
+mask(best);fmt(best);
+return {n:n,m:m};
+}
+(function(){
+var $=function(i){return document.getElementById(i)};
+var txt=$('txt'),out=$('out'),emp=$('empty'),msg=$('msg'),dl=$('dl'),dg=$('d'),tm,svg='',lq=null;
+function say(t,e){msg.textContent=t||'';msg.style.fontWeight=e?'800':'400';}
+function ds(s){dg.textContent='وضعیت: '+s;}
+ds('جاوااسکریپت ✓');
+window.onerror=function(m){say('خطا: '+m,1);ds('خطا: '+m);};
+function none(){out.style.display='none';emp.style.display='block';dl.disabled=true;svg='';lq=null;}
+function make(){
+var t=txt.value.trim();
+if(!t){none();say('');return;}
+var q;
+try{q=makeQR(t);}catch(e){none();say('متن خیلی طولانی است. کوتاه‌ترش کن.',1);return;}
+var n=q.n,z=n+8,d='',x,y;
+for(y=0;y<n;y++)for(x=0;x<n;x++)if(q.m[y][x])d+='M'+(x+4)+' '+(y+4)+'h1v1h-1z';
+svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+z+' '+z+'" shape-rendering="crispEdges"><rect width="'+z+'" height="'+z+'" fill="#fff"/><path d="'+d+'"/></svg>';
+lq=q;
+out.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+out.style.display='block';emp.style.display='none';dl.disabled=false;
+say('آماده است. با دوربین گوشی دیگر اسکنش کن.');
+ds('جاوااسکریپت ✓ | QR ✓');
+}
+function later(){clearTimeout(tm);tm=setTimeout(make,300);}
+['input','keyup','change','paste'].forEach(function(e){txt.addEventListener(e,later);});
+$('go').onclick=make;
+$('cl').onclick=function(){txt.value='';none();say('');txt.focus();};
+$('pa').onclick=function(){
+if(navigator.clipboard&&navigator.clipboard.readText){
+navigator.clipboard.readText().then(function(v){txt.value=v;make();}).catch(function(){say('اجازه‌ی چسباندن داده نشد. داخل کادر نگه دار و Paste را بزن.',1);});
+}else say('داخل کادر نگه دار و Paste را بزن.',1);
+};
+function save(b,name){
+var u=URL.createObjectURL(b),a=document.createElement('a');
+a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();
+setTimeout(function(){URL.revokeObjectURL(u);},2000);
+}
+dl.onclick=function(){
+if(!lq)return;
+try{
+var n=lq.n,z=n+8,s=Math.max(4,Math.floor(1024/z)),c=document.createElement('canvas'),x,y;
+c.width=c.height=z*s;
+var g=c.getContext('2d');
+g.fillStyle='#fff';g.fillRect(0,0,z*s,z*s);g.fillStyle='#000';
+for(y=0;y<n;y++)for(x=0;x<n;x++)if(lq.m[y][x])g.fillRect((x+4)*s,(y+4)*s,s,s);
+c.toBlob(function(b){save(b,'qr-code.png');say('ذخیره شد.');},'image/png');
+}catch(e){save(new Blob([svg],{type:'image/svg+xml'}),'qr-code.svg');say('ذخیره شد (SVG).');}
+};
+})();
+</script>
+</body>
+</html>
